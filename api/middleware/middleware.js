@@ -1,3 +1,5 @@
+const User = require('../users/users-model.js')
+
 function logger(req, res, next) {
   // DO YOUR 
   const timestamp = new Date().toLocaleString()
@@ -7,16 +9,34 @@ function logger(req, res, next) {
   next()
 }
 
-function validateUserId(req, res, next) {
-  // DO YOUR 
-  console.log('validateUserId middleware')
+async function validateUserId(req, res, next) {
+  try {
+const user = await User.getById(req.params.id)
+if (!user) { 
+  res.status(404).json({
+  message: 'user not found',
+  })
+} else {
+  req.user = user
   next()
+}
+  } catch (err) {
+    res.status(500).json({
+    message: 'problem finding user',
+    })
+  }
 }
 
 function validateUser(req, res, next) {
-  // DO YOUR 
-  console.log('validateUser middleware')
-  next()
+ const { name } = req.body
+ if (!name || !name.trim()) { 
+    res.status(400).json({
+    message: 'missing required name field'
+   })
+ } else {
+   req.name = name.trim()
+    next()
+ }
 }
 
 function validatePost(req, res, next) {
