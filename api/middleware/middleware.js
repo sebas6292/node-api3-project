@@ -1,7 +1,6 @@
 const User = require('../users/users-model.js')
 
 function logger(req, res, next) {
-  // DO YOUR 
   const timestamp = new Date().toLocaleString()
   const method = req.method
   const url = req.originalUrl
